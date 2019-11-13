@@ -162,6 +162,7 @@ class CustomiseViewController : UIViewController, NavigationBarActions {
             break
         }
     }
+    // Thsese are the side Drawer asction which is used in the navigation bar view. I am using KYDrawerController for side menu
     @objc func navigationBarSideMenuAction() {
         if let vc = self.navigationController?.parent as? KYDrawerController {
             vc.setDrawerState(.opened, animated: true)
@@ -269,6 +270,21 @@ extension UIViewController {
         }
     }
 }
+// MARK: MVVM Global View Model Observer for start and stop LoadingIndicator and Show Error in Toast
+struct BrokenRule {
+    var propertyName :String
+    var message :String
+}
+// Implemented by all view models
+protocol ViewModel {
+    var brokenRules :[BrokenRule] { get set}
+    var isValid :Bool { mutating get }
+    var showAlertClosure: (() -> ())? { get set }
+    var updateLoadingStatus: (() -> ())? { get set }
+    var didFinishFetch: (() -> ())? { get set }
+    var error: Error? { get set }
+    var isLoading: Bool { get set }
+}
 extension CustomiseViewController {
     func setViewModelObserver(model:ViewModel){
         var viewModel = model
@@ -283,7 +299,7 @@ extension CustomiseViewController {
         }
     }
 }
-
+// Yon can find below code in my next repositor Present View Controller Transitions. Only import that class in project
 extension CustomiseViewController : UIViewControllerTransitioningDelegate {
     //Mark Custom present view controller
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -298,6 +314,7 @@ extension CustomiseViewController : UITextFieldDelegate {
         return true
     }
 }
+// Override this method in the particular class where search is used
 extension CustomiseViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) { }
 }
